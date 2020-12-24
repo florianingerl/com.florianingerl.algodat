@@ -15,20 +15,14 @@ public class Main {
 		for(int e : tree) {
 			System.out.print(e + ",");
 		}
-		
 		System.out.println();
 		
-		tree.setIterationMode(AVLTree.POSTORDER);
-		for(int e : tree) {
-			System.out.print(e + ",");
-		}
+		if(tree.remove(2))
+			for(int e : tree) {
+				System.out.print(e + ",");
+			}
 		
 		System.out.println();
-		
-		tree.setIterationMode(AVLTree.INORDER);
-		for(int e : tree) {
-			System.out.print(e + ",");
-		}
 		
 		
 		
