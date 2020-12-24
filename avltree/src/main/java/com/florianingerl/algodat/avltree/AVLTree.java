@@ -120,65 +120,33 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 			return remove(node.right, e);
 		}
 	}
-
+	
 	private void removeThis(AVLNode<E> node) {
-		if (node.left == null && node.right == null) {
-			if (node.parent.left == node)
-				node.parent.left = null;
-			else
-				node.parent.right = null;
-			return;
-		}
-
-		if (node.left != null) {
-			AVLNode<E> l = node.left.left;
-			AVLNode<E> r = node.left.right;
-			node.left.left = node;
-			node.left.right = node.right;
-			if (node.right != null)
-				node.right.parent = node.left;
-			node.left.parent = node.parent;
-			if (node.parent != null) {
-				if (node.parent.left == node)
-					node.parent.left = node.left;
+		if(node.left == null && node.right == null) {
+			if(node.parent != null) {
+				if(node.parent.left == node)
+					node.parent.left = null;
 				else
-					node.parent.right = node.left;
-			} else {
-				root = node.left;
-			}
-			node.parent = node.left;
-			node.left = l;
-			if (l != null)
-				l.parent = node;
-			node.right = r;
-			if (r != null)
-				r.parent = node;
-			removeThis(node);
-		} else {
-			AVLNode<E> l = node.right.left;
-			AVLNode<E> r = node.right.right;
-			node.right.right = node;
-			node.right.left = node.left;
-			if (node.left != null)
-				node.left.parent = node.right;
-			node.right.parent = node.parent;
-			if (node.parent != null) {
-				if (node.parent.left == node)
-					node.parent.left = node.right;
-				else
-					node.parent.right = node.right;
+					node.parent.right = null;
 			}
 			else {
-				root = node.right;
+				root = null;
 			}
-			node.parent = node.right;
-			node.left = l;
-			if (l != null)
-				l.parent = node;
-			node.right = r;
-			if (r != null)
-				r.parent = node;
-			removeThis(node);
+			return;
+		}
+		
+		if(node.left != null ) {
+			E z = node.left.value;
+			node.left.value = node.value;
+			node.value = z;
+			removeThis(node.left);
+		}
+		else {
+			E z = node.right.value;
+			node.right.value = node.value;
+			node.value = z;
+			removeThis(node.right);
 		}
 	}
+
 }
