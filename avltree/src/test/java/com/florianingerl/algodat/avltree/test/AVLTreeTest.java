@@ -1,6 +1,8 @@
 package com.florianingerl.algodat.avltree.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -66,6 +68,30 @@ public class AVLTreeTest {
 			sb.append(e + ",");
 		}
 		assertEquals("0,1,2,3,5,7,", sb.toString() );
+		
+	}
+	
+	@Test
+	public void testContains() {
+		AVLTree<Integer> tree = new AVLTree<Integer>();
+	
+		assertTrue( tree.add(2) );
+		assertTrue( tree.add(1) );
+		assertTrue( tree.add(0) );
+		assertTrue( tree.add(5) );
+		assertTrue( tree.add(3) );
+		assertTrue( tree.add(7) );
+		assertFalse( tree.add(7));
+		assertFalse( tree.add(2));
+		assertFalse( tree.add(5));
+		assertFalse(tree.add(1));
+		assertFalse(tree.add(3));
+		
+		assertTrue(tree.contains(3));
+		assertFalse(tree.contains(11));
+		assertTrue( tree.contains(2));
+		
+		
 		
 	}
 	
