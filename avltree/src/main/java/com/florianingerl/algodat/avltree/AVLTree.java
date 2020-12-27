@@ -10,11 +10,13 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 		AVLNode<E> left;
 		AVLNode<E> right;
 		AVLNode<E> parent;
+		int depth;
 		E value;
 
 		AVLNode(AVLNode<E> parent, E e) {
 			this.parent = parent;
 			this.value = e;
+			depth = 1;
 		}
 	}
 
@@ -33,6 +35,11 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 		return add(root, e);
 	}
 
+	private int depth(AVLNode<E> node) {
+		if(node == null) return 0;
+		return node.depth;
+	}
+	
 	private boolean add(AVLNode<E> node, E e) {
 		if (node.value.compareTo(e) == 0)
 			return false;
@@ -41,7 +48,27 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 				node.left = new AVLNode<E>(node, e);
 				return true;
 			}
-			return add(node.left, e);
+			if (add(node.left, e)) {
+				node.depth = 1 + Math.max( depth(node.left), depth(node.right) );
+				int balance = depth(node.right) - depth(node.left);
+				if(balance == -2) {
+					if(node.parent == null)
+						root = node.left;
+					else if(node.parent.left == node)
+						node.parent.left = node.left;
+					else
+						node.parent.right = node.left;
+					node.left.parent = node.parent;
+					node.left.right = node;
+					node.parent = node.left;
+					if(node.left.right!=null)
+						node.left.right.parent = node;
+					node.left = node.left.right;
+				}
+				return true;
+			} else {
+				return false;
+			}
 		}
 		if (node.right == null) {
 			node.right = new AVLNode<E>(node, e);
@@ -120,28 +147,26 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 			return remove(node.right, e);
 		}
 	}
-	
+
 	private void removeThis(AVLNode<E> node) {
-		if(node.left == null && node.right == null) {
-			if(node.parent != null) {
-				if(node.parent.left == node)
+		if (node.left == null && node.right == null) {
+			if (node.parent != null) {
+				if (node.parent.left == node)
 					node.parent.left = null;
 				else
 					node.parent.right = null;
-			}
-			else {
+			} else {
 				root = null;
 			}
 			return;
 		}
-		
-		if(node.left != null ) {
+
+		if (node.left != null) {
 			E z = node.left.value;
 			node.left.value = node.value;
 			node.value = z;
 			removeThis(node.left);
-		}
-		else {
+		} else {
 			E z = node.right.value;
 			node.right.value = node.value;
 			node.value = z;
