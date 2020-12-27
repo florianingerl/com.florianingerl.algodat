@@ -64,6 +64,7 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 					if(node.left.right!=null)
 						node.left.right.parent = node;
 					node.left = node.left.right;
+					node.depth -= 2;
 				}
 				return true;
 			} else {
@@ -74,7 +75,31 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 			node.right = new AVLNode<E>(node, e);
 			return true;
 		}
-		return add(node.right, e);
+		if(add(node.right, e) ) {
+			node.depth = 1 + Math.max(depth(node.left), depth(node.right) );
+			int balance = depth(node.right) - depth(node.left);
+			if(balance == 2) {
+				if(node.parent == null) {
+					root = node.right;
+				}
+				else if(node.parent.left == node) {
+					node.parent.left = node.right;
+				}
+				else {
+					node.parent.right = node.right;
+				}
+				node.right.parent = node.parent;
+				node.right.left = node;
+				node.parent = node.right;
+				if(node.right.left != null) {
+					node.right.left.parent = node;
+				}
+				node.right = node.right.left;
+				node.depth -= 2;
+			}
+			return true;
+		}
+		return false;
 	}
 
 	public boolean contains(E e) {
