@@ -40,6 +40,10 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 		return node.depth;
 	}
 	
+	private int getBalance(AVLNode<E> node) {
+		return depth(node.right) - depth(node.left);
+	}
+	
 	private boolean add(AVLNode<E> node, E e) {
 		if (node.value.compareTo(e) == 0)
 			return false;
@@ -50,8 +54,7 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 			}
 			if (add(node.left, e)) {
 				node.depth = 1 + Math.max( depth(node.left), depth(node.right) );
-				int balance = depth(node.right) - depth(node.left);
-				if(balance == -2) {
+				if(getBalance(node) == -2) {
 					if(node.parent == null)
 						root = node.left;
 					else if(node.parent.left == node)
@@ -77,8 +80,7 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 		}
 		if(add(node.right, e) ) {
 			node.depth = 1 + Math.max(depth(node.left), depth(node.right) );
-			int balance = depth(node.right) - depth(node.left);
-			if(balance == 2) {
+			if(getBalance(node) == 2) {
 				if(node.parent == null) {
 					root = node.right;
 				}
