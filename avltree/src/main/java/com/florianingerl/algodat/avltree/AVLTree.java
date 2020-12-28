@@ -55,19 +55,13 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 			if (add(node.left, e)) {
 				node.depth = 1 + Math.max( depth(node.left), depth(node.right) );
 				if(getBalance(node) == -2) {
-					if(node.parent == null)
-						root = node.left;
-					else if(node.parent.left == node)
-						node.parent.left = node.left;
-					else
-						node.parent.right = node.left;
-					node.left.parent = node.parent;
-					node.left.right = node;
-					node.parent = node.left;
-					if(node.left.right!=null)
-						node.left.right.parent = node;
-					node.left = node.left.right;
-					node.depth -= 2;
+					if(getBalance(node.left) == -1) {
+						rotateRight(node);
+					}
+					else {
+						rotateLeft(node.left);
+						rotateRight(node);
+					}
 				}
 				return true;
 			} else {
@@ -81,27 +75,53 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 		if(add(node.right, e) ) {
 			node.depth = 1 + Math.max(depth(node.left), depth(node.right) );
 			if(getBalance(node) == 2) {
-				if(node.parent == null) {
-					root = node.right;
-				}
-				else if(node.parent.left == node) {
-					node.parent.left = node.right;
+				if(getBalance(node.right) == 1) {
+					rotateLeft(node);
 				}
 				else {
-					node.parent.right = node.right;
+					rotateRight(node.right);
+					rotateLeft(node);
 				}
-				node.right.parent = node.parent;
-				node.right.left = node;
-				node.parent = node.right;
-				if(node.right.left != null) {
-					node.right.left.parent = node;
-				}
-				node.right = node.right.left;
-				node.depth -= 2;
 			}
 			return true;
 		}
 		return false;
+	}
+	
+	private void rotateLeft(AVLNode<E> node) {
+		if(node.parent == null) {
+			root = node.right;
+		}
+		else if(node.parent.left == node) {
+			node.parent.left = node.right;
+		}
+		else {
+			node.parent.right = node.right;
+		}
+		node.right.parent = node.parent;
+		node.right.left = node;
+		node.parent = node.right;
+		if(node.right.left != null) {
+			node.right.left.parent = node;
+		}
+		node.right = node.right.left;
+		node.depth -= 2;
+	}
+	
+	private void rotateRight(AVLNode<E> node) {
+		if(node.parent == null)
+			root = node.left;
+		else if(node.parent.left == node)
+			node.parent.left = node.left;
+		else
+			node.parent.right = node.left;
+		node.left.parent = node.parent;
+		node.left.right = node;
+		node.parent = node.left;
+		if(node.left.right!=null)
+			node.left.right.parent = node;
+		node.left = node.left.right;
+		node.depth -= 2;
 	}
 
 	public boolean contains(E e) {
