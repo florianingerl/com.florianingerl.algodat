@@ -21,7 +21,9 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 	}
 
 	private AVLNode<E> root;
-	private int iterationMode = PREORDER;
+	private int size = 0;
+	
+	private int iterationMode = INORDER;
 
 	public static final int PREORDER = 0;
 	public static final int POSTORDER = 1;
@@ -30,9 +32,43 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 	public boolean add(E e) {
 		if (root == null) {
 			root = new AVLNode<E>(null, e);
+			size++;
 			return true;
 		}
-		return add(root, e);
+		if(add(root,e)) {
+			size++;
+			return true;
+		}
+		return false;
+	}
+	
+	public void add(E... all) {
+		for(E e : all) {
+			add(e);
+		}
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		boolean first = true;
+		for(E e : this) {
+			if(first) {
+				first = false;
+			}
+			else {
+				sb.append(",");
+			}
+			sb.append(e);
+		}
+		return sb.toString();
+	}
+	
+	//This is the maximum number of edges from the root to a leaf
+	public int depth() {
+		if(root == null)
+			return 0;
+		return depth(root) - 1;
 	}
 
 	private int depth(AVLNode<E> node) {
@@ -105,7 +141,8 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 			node.right.left.parent = node;
 		}
 		node.right = node.right.left;
-		node.depth -= 2;
+		computeDepth(node);
+		computeDepth(node.parent);
 	}
 	
 	private void rotateRight(AVLNode<E> node) {
@@ -121,7 +158,12 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 		if(node.left.right!=null)
 			node.left.right.parent = node;
 		node.left = node.left.right;
-		node.depth -= 2;
+		computeDepth(node);
+		computeDepth(node.parent);
+	}
+	
+	private void computeDepth(AVLNode<E> node) {
+		node.depth =  1 + Math.max(depth(node.left), depth(node.right));
 	}
 
 	public boolean contains(E e) {
@@ -179,7 +221,11 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 	}
 
 	public boolean remove(E e) {
-		return remove(root, e);
+		if( remove(root, e) ) {
+			--size;
+			return true;
+		}
+		return false;
 	}
 
 	private boolean remove(AVLNode<E> node, E e) {

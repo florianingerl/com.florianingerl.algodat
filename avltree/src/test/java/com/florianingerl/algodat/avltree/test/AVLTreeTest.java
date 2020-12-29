@@ -21,6 +21,7 @@ public class AVLTreeTest {
 		tree.add(3);
 		tree.add(7);
 
+		tree.setIterationMode(AVLTree.PREORDER);
 		StringBuilder sb = new StringBuilder();
 		for (int e : tree) {
 			sb.append(e + ",");
@@ -127,6 +128,48 @@ public class AVLTreeTest {
 		assertTrue(tree.remove(2));
 		assertFalse(tree.contains(2));
 		assertTrue(tree.add(2));
+	}
+	
+	@Test
+	public void testRightRotation() {
+		AVLTree<Integer> tree = new AVLTree<Integer>();
+		tree.add(1,0,-1);
+		assertEquals("-1,0,1", tree.toString());
+		assertEquals(1, tree.depth() );
+		
+		tree = new AVLTree<Integer>();
+		tree.add(1,-2,-1,-3,-5);
+		assertEquals("-5,-3,-2,-1,1", tree.toString() );
+		assertEquals(2, tree.depth() );
+	}
+	
+	@Test
+	public void testLeftRotation() {
+		AVLTree<Integer> tree = new AVLTree<Integer>();
+		tree.add(1,2,3);
+		assertEquals("1,2,3", tree.toString() );
+		assertEquals(1, tree.depth() );
+		
+		tree = new AVLTree<Integer>();
+		tree.add(1,4,0,2,5);
+		assertEquals("0,1,2,4,5", tree.toString() );
+		assertEquals(2, tree.depth() );
+	}
+	
+	@Test
+	public void testLeftRightRotation() {
+		AVLTree<Integer> tree = new AVLTree<Integer>();
+		tree.add(1,-4,2,-5,-3,-2);
+		assertEquals("-5,-4,-3,-2,1,2", tree.toString() );
+		assertEquals(2, tree.depth() );
+	}
+	
+	@Test
+	public void testRightLeftRotation() {
+		AVLTree<Integer> tree = new AVLTree<Integer>();
+		tree.add(1,0,5,6,4,3);
+		assertEquals("0,1,3,4,5,6", tree.toString() );
+		assertEquals(2, tree.depth() );
 	}
 
 }
