@@ -29,12 +29,15 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 	public static final int POSTORDER = 1;
 	public static final int INORDER = 2;
 
+	private boolean rotated = false;
+	
 	public boolean add(E e) {
 		if (root == null) {
 			root = new AVLNode<E>(null, e);
 			size++;
 			return true;
 		}
+		rotated = false;
 		if(add(root,e)) {
 			size++;
 			return true;
@@ -89,7 +92,7 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 				return true;
 			}
 			if (add(node.left, e)) {
-				if(getBalance(node) == -2) {
+				if(!rotated && getBalance(node) == -2) {
 					if(getBalance(node.left) == -1) {
 						rotateRight(node);
 					}
@@ -97,6 +100,7 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 						rotateLeft(node.left);
 						rotateRight(node);
 					}
+					rotated = true;
 				}
 				return true;
 			} else {
@@ -108,7 +112,7 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 			return true;
 		}
 		if(add(node.right, e) ) {
-			if(getBalance(node) == 2) {
+			if(!rotated && getBalance(node) == 2) {
 				if(getBalance(node.right) == 1) {
 					rotateLeft(node);
 				}
@@ -116,6 +120,7 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 					rotateRight(node.right);
 					rotateLeft(node);
 				}
+				rotated = true;
 			}
 			return true;
 		}
