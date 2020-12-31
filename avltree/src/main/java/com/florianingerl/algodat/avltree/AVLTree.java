@@ -73,7 +73,7 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 
 	private int depth(AVLNode<E> node) {
 		if(node == null) return 0;
-		return node.depth;
+		return 1 + Math.max(depth(node.left), depth(node.right));
 	}
 	
 	private int getBalance(AVLNode<E> node) {
@@ -89,7 +89,6 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 				return true;
 			}
 			if (add(node.left, e)) {
-				node.depth = 1 + Math.max( depth(node.left), depth(node.right) );
 				if(getBalance(node) == -2) {
 					if(getBalance(node.left) == -1) {
 						rotateRight(node);
@@ -109,7 +108,6 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 			return true;
 		}
 		if(add(node.right, e) ) {
-			node.depth = 1 + Math.max(depth(node.left), depth(node.right) );
 			if(getBalance(node) == 2) {
 				if(getBalance(node.right) == 1) {
 					rotateLeft(node);
@@ -125,22 +123,19 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 	}
 	
 	private void rotateLeft(AVLNode<E> node) {
-		if(node.parent == null) {
+		if(node.parent == null)
 			root = node.right;
-		}
-		else if(node.parent.left == node) {
+		else if(node.parent.left == node)
 			node.parent.left = node.right;
-		}
-		else {
+		else
 			node.parent.right = node.right;
-		}
 		node.right.parent = node.parent;
 		node.right.left = node;
 		node.parent = node.right;
-		if(node.right.left != null) {
-			node.right.left.parent = node;
-		}
-		node.right = node.right.left;
+		AVLNode<E> n = node.right.left;
+		node.right.left = node;
+		node.right = n;
+		if(n!=null) n.parent = node;
 		computeDepth(node);
 		computeDepth(node.parent);
 	}
@@ -155,9 +150,10 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 		node.left.parent = node.parent;
 		node.left.right = node;
 		node.parent = node.left;
-		if(node.left.right!=null)
-			node.left.right.parent = node;
-		node.left = node.left.right;
+		AVLNode<E> n = node.left.right;
+		node.left.right = node;
+		node.left = n;
+		if(n!=null) n.parent = node;
 		computeDepth(node);
 		computeDepth(node.parent);
 	}
