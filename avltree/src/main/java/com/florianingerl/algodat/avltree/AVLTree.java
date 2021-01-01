@@ -76,7 +76,8 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 
 	private int depth(AVLNode<E> node) {
 		if(node == null) return 0;
-		return 1 + Math.max(depth(node.left), depth(node.right));
+		return node.depth;
+		//return 1 + Math.max(depth(node.left), depth(node.right));
 	}
 	
 	private int getBalance(AVLNode<E> node) {
@@ -89,15 +90,18 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 		if (node.value.compareTo(e) > 0) {
 			if (node.left == null) {
 				node.left = new AVLNode<E>(node, e);
+				computeDepth(node);
 				return true;
 			}
 			if (add(node.left, e)) {
+				computeDepth(node);
 				if(!rotated && getBalance(node) == -2) {
 					if(getBalance(node.left) == -1) {
 						rotateRight(node);
 					}
 					else {
 						rotateLeft(node.left);
+						computeDepth(node);
 						rotateRight(node);
 					}
 					rotated = true;
@@ -109,15 +113,18 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 		}
 		if (node.right == null) {
 			node.right = new AVLNode<E>(node, e);
+			computeDepth(node);
 			return true;
 		}
 		if(add(node.right, e) ) {
+			computeDepth(node);
 			if(!rotated && getBalance(node) == 2) {
 				if(getBalance(node.right) == 1) {
 					rotateLeft(node);
 				}
 				else {
 					rotateRight(node.right);
+					computeDepth(node);
 					rotateLeft(node);
 				}
 				rotated = true;
