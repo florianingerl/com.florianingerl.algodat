@@ -14,19 +14,16 @@ public class AVLTreeTest {
 	public void testpreorderTraversal() {
 		AVLTree<Integer> tree = new AVLTree<Integer>();
 
-		tree.add(2);
 		tree.add(1);
+		tree.add(2);
 		tree.add(0);
-		tree.add(5);
-		tree.add(3);
-		tree.add(7);
 
 		tree.setIterationMode(AVLTree.PREORDER);
 		StringBuilder sb = new StringBuilder();
 		for (int e : tree) {
 			sb.append(e + ",");
 		}
-		assertEquals("2,1,0,5,3,7,", sb.toString());
+		assertEquals("1,0,2,", sb.toString());
 
 	}
 
@@ -34,12 +31,10 @@ public class AVLTreeTest {
 	public void testpostorderTraversal() {
 		AVLTree<Integer> tree = new AVLTree<Integer>();
 
-		tree.add(2);
 		tree.add(1);
+		tree.add(2);
 		tree.add(0);
-		tree.add(5);
-		tree.add(3);
-		tree.add(7);
+
 
 		StringBuilder sb = new StringBuilder();
 
@@ -47,7 +42,7 @@ public class AVLTreeTest {
 		for (int e : tree) {
 			sb.append(e + ",");
 		}
-		assertEquals("0,1,3,7,5,2,", sb.toString());
+		assertEquals("0,2,1,", sb.toString());
 
 	}
 
