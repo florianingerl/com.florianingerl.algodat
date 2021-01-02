@@ -142,10 +142,9 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 		else
 			node.parent.right = node.right;
 		node.right.parent = node.parent;
-		node.right.left = node;
-		node.parent = node.right;
 		AVLNode<E> n = node.right.left;
 		node.right.left = node;
+		node.parent = node.right;
 		node.right = n;
 		if(n!=null) n.parent = node;
 		computeDepth(node);
@@ -160,10 +159,9 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 		else
 			node.parent.right = node.left;
 		node.left.parent = node.parent;
-		node.left.right = node;
-		node.parent = node.left;
 		AVLNode<E> n = node.left.right;
 		node.left.right = node;
+		node.parent = node.left;
 		node.left = n;
 		if(n!=null) n.parent = node;
 		computeDepth(node);
@@ -222,10 +220,11 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 
 	private void collectInorder(AVLNode<E> node, List<E> l) {
 		if (node == null)
-			return;
+			return;;
 		collectInorder(node.left, l);
 		l.add(node.value);
 		collectInorder(node.right, l);
+		
 	}
 
 	public boolean remove(E e) {
