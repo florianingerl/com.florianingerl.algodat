@@ -84,6 +84,36 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 		return depth(node.right) - depth(node.left);
 	}
 	
+	private void rotateRightOrLeftRight(AVLNode<E> node) {
+		computeDepth(node);
+		if(!rotated && getBalance(node) == -2) {
+			if(getBalance(node.left) == -1) {
+				rotateRight(node);
+			}
+			else {
+				rotateLeft(node.left);
+				computeDepth(node);
+				rotateRight(node);
+			}
+			rotated = true;
+		}
+	}
+	
+	private void rotateLeftOrRightLeft(AVLNode<E> node) {
+		computeDepth(node);
+		if(!rotated && getBalance(node) == 2) {
+			if(getBalance(node.right) == 1) {
+				rotateLeft(node);
+			}
+			else {
+				rotateRight(node.right);
+				computeDepth(node);
+				rotateLeft(node);
+			}
+			rotated = true;
+		}
+	}
+	
 	private boolean add(AVLNode<E> node, E e) {
 		if (node.value.compareTo(e) == 0)
 			return false;
@@ -94,18 +124,7 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 				return true;
 			}
 			if (add(node.left, e)) {
-				computeDepth(node);
-				if(!rotated && getBalance(node) == -2) {
-					if(getBalance(node.left) == -1) {
-						rotateRight(node);
-					}
-					else {
-						rotateLeft(node.left);
-						computeDepth(node);
-						rotateRight(node);
-					}
-					rotated = true;
-				}
+				rotateRightOrLeftRight(node);
 				return true;
 			} else {
 				return false;
@@ -117,18 +136,7 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 			return true;
 		}
 		if(add(node.right, e) ) {
-			computeDepth(node);
-			if(!rotated && getBalance(node) == 2) {
-				if(getBalance(node.right) == 1) {
-					rotateLeft(node);
-				}
-				else {
-					rotateRight(node.right);
-					computeDepth(node);
-					rotateLeft(node);
-				}
-				rotated = true;
-			}
+			rotateLeftOrRightLeft(node);
 			return true;
 		}
 		return false;
@@ -242,9 +250,19 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 			removeThis(node);
 			return true;
 		} else if (node.value.compareTo(e) > 0) {
-			return remove(node.left, e);
+			if( remove(node.left, e) ) {
+				computeDepth(node);
+				rotateLeftOrRightLeft(node);
+				return true;
+			}
+			return false;
 		} else {
-			return remove(node.right, e);
+			if( remove(node.right, e) ) {
+				computeDepth(node);
+				rotateRightOrLeftRight(node);
+				return true;
+			}
+			return false;
 		}
 	}
 
@@ -266,11 +284,15 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 			node.left.value = node.value;
 			node.value = z;
 			removeThis(node.left);
+			computeDepth(node);
+			rotateLeftOrRightLeft(node);
 		} else {
 			E z = node.right.value;
 			node.right.value = node.value;
 			node.value = z;
 			removeThis(node.right);
+			computeDepth(node);
+			rotateRightOrLeftRight(node);
 		}
 	}
 
