@@ -120,6 +120,7 @@ public class AVLTreeTest {
 		assertFalse(tree.contains(5));
 		assertTrue(tree.add(5));
 		
+		assertTrue(tree.contains(2));
 		assertTrue(tree.remove(2));
 		assertFalse(tree.contains(2));
 		assertTrue(tree.add(2));

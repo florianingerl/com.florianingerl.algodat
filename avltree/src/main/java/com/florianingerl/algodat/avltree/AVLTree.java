@@ -236,6 +236,7 @@ public class AVLTree<E extends Comparable<E>> implements Iterable<E> {
 	}
 
 	public boolean remove(E e) {
+		rotated = false;
 		if( remove(root, e) ) {
 			--size;
 			return true;
